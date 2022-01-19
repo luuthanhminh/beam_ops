@@ -124,105 +124,76 @@ module "aws-eks-accelerator" {
 
   # Self-managed Node Group
   # Karpenter requires one node to get up and running
-  self_managed_node_groups = {
+  managed_node_groups = {
     brkt_m6xlarge_stream = {
-      node_group_name         = "${local.eks_cluster_id}-brkt-stream"
-      launch_template_os      = "bottlerocket" # amazonlinux2eks  or bottlerocket or windows
-      capacity_type        = ""   
-      public_ip               = false          # Use this to enable public IP for EC2 instances; only for public subnets used in launch templates ;
-      pre_userdata            = ""
-      custom_ami_id           = ""
-      bootstrap_extra_args    = ""
-      post_userdata           = ""
-      kubelet_extra_args      = ""
-      bootstrap_extra_args    = ""
-      additional_iam_policies = []
-      enable_monitoring       = false
+      node_group_name        = "brkt-stream"
+      create_launch_template = true
+      ami_type               = "BOTTLEROCKET_x86_64"
+      launch_template_os     = "bottlerocket" # amazonlinux2eks  or bottlerocket or windows
+      capacity_type          = "ON_DEMAND"
+      public_ip              = false # Use this to enable public IP for EC2 instances; only for public subnets used in launch templates ;
       k8s_labels = {
         Environment = local.environment
         dedicated   = "stream"
       }
-      taints = [
-        {
-          key    = "role"
-          value  = "stream_group"
-          effect = "NO_SCHEDULE"
-        }
-      ]
       max_size       = 2
       min_size       = 1
-      instance_type = "m6i.xlarge"
+      desired_size   = 1
+      instance_types = ["c5.xlarge"]
       disk_size      = 20
-      disk_type            = "gp2"
+      disk_type      = "gp2"
       subnet_ids     = module.aws_vpc.private_subnets # Define your private/public subnets list with comma seprated subnet_ids  = ['subnet1','subnet2','subnet3']
       additional_tags = {
         ExtraTag = "bottlerocket"
-        Name     = "stream"
+        Name     = "${local.eks_cluster_id}-stream"
       }
       create_worker_security_group = true
     },
     brkt_m6i_app = {
-      node_group_name         = "${local.eks_cluster_id}-brkt-app"
-      launch_template_os      = "bottlerocket" # amazonlinux2eks  or bottlerocket or windows
-      capacity_type        = ""   
-      public_ip               = false          # Use this to enable public IP for EC2 instances; only for public subnets used in launch templates ;
-      pre_userdata            = ""
-      custom_ami_id           = ""
-      bootstrap_extra_args    = ""
-      post_userdata           = ""
-      kubelet_extra_args      = ""
-      bootstrap_extra_args    = ""
-      additional_iam_policies = []
-      enable_monitoring       = false
+      node_group_name        = "brkt-app"
+      create_launch_template = true
+      ami_type               = "BOTTLEROCKET_x86_64"
+      launch_template_os     = "bottlerocket" # amazonlinux2eks  or bottlerocket or windows
+      capacity_type          = "ON_DEMAND"
+      public_ip              = false # Use this to enable public IP for EC2 instances; only for public subnets used in launch templates ;
       k8s_labels = {
         Environment = local.environment
         dedicated   = "app"
       }
-      taints = [
-        {
-          key    = "role"
-          value  = "app_group"
-          effect = "NO_SCHEDULE"
-        }
-      ]
       max_size       = 2
       min_size       = 1
-      instance_type = "m6i.large"
+      desired_size   = 1
+      instance_types = ["t3.large"]
       disk_size      = 20
-      disk_type            = "gp2"
+      disk_type      = "gp2"
       subnet_ids     = module.aws_vpc.private_subnets # Define your private/public subnets list with comma seprated subnet_ids  = ['subnet1','subnet2','subnet3']
       additional_tags = {
         ExtraTag = "bottlerocket"
-        Name     = "app"
+        Name     = "${local.eks_cluster_id}-app"
       }
       create_worker_security_group = true
     },
     brkt_m6i_addon = {
-      node_group_name         = "${local.eks_cluster_id}-brkt-addon"
-      launch_template_os      = "bottlerocket" # amazonlinux2eks  or bottlerocket or windows
-      capacity_type        = ""   
-      public_ip               = false          # Use this to enable public IP for EC2 instances; only for public subnets used in launch templates ;
-      pre_userdata            = ""
-      custom_ami_id           = ""
-      bootstrap_extra_args    = ""
-      post_userdata           = ""
-      kubelet_extra_args      = ""
-      bootstrap_extra_args    = ""
-      additional_iam_policies = []
-      enable_monitoring       = false
+      node_group_name        = "brkt-addon"
+      create_launch_template = true
+      ami_type               = "BOTTLEROCKET_x86_64"
+      launch_template_os     = "bottlerocket" # amazonlinux2eks  or bottlerocket or windows
+      capacity_type          = "ON_DEMAND"
+      public_ip              = false # Use this to enable public IP for EC2 instances; only for public subnets used in launch templates ;
       k8s_labels = {
         Environment = local.environment
         dedicated   = "addon"
       }
       max_size       = 2
       min_size       = 1
-      instance_type = "m6i.large"
+      desired_size   = 1
+      instance_types = ["t3.large"]
       disk_size      = 50
-      disk_type            = "gp2"
+      disk_type      = "gp2"
       subnet_ids     = module.aws_vpc.private_subnets # Define your private/public subnets list with comma seprated subnet_ids  = ['subnet1','subnet2','subnet3']
       additional_tags = {
         ExtraTag = "bottlerocket"
-        Name     = "addon"
+        Name     = "${local.eks_cluster_id}-addon"
       }
       create_worker_security_group = true
     }
@@ -242,6 +213,7 @@ module "kubernetes-addons" {
   enable_amazon_eks_vpc_cni           = true
   enable_amazon_eks_coredns           = true
   enable_amazon_eks_kube_proxy        = true
+  enable_argocd                       = true
 
-  depends_on = [module.aws-eks-accelerator.self_managed_node_groups]
+  depends_on = [module.aws-eks-accelerator.managed_node_groups]
 }
