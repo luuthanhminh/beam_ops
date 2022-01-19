@@ -1,0 +1,11 @@
+.exe
+.pyc
+.idea
+.terraform
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
+.DS_Store
+reports
+*.tfvars
+!terraform.auto.tfvars
