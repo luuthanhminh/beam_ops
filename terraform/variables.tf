@@ -39,7 +39,7 @@ variable "terraform_version" {
 variable "vpc_cidr" {
   type        = string
   description = "VPC CIDR"
-  default = "10.10.0.0/16"
+  default     = "10.10.0.0/16"
 }
 
 # EKS CONTROL PLANE

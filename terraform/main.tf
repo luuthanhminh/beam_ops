@@ -126,12 +126,12 @@ module "aws-eks-accelerator" {
   # Karpenter requires one node to get up and running
   managed_node_groups = {
     brkt_m6xlarge_stream = {
-      node_group_name        = "brkt-stream"
-      create_launch_template = true
-      ami_type               = "BOTTLEROCKET_x86_64"
-      launch_template_os     = "bottlerocket" # amazonlinux2eks  or bottlerocket or windows
-      capacity_type          = "ON_DEMAND"
-      public_ip              = false # Use this to enable public IP for EC2 instances; only for public subnets used in launch templates ;
+      node_group_name = "brkt-stream"
+      # create_launch_template = true
+      # ami_type               = "BOTTLEROCKET_x86_64"
+      launch_template_os = "amazonlinux2eks" # amazonlinux2eks  or bottlerocket or windows
+      capacity_type      = "ON_DEMAND"
+      public_ip          = false # Use this to enable public IP for EC2 instances; only for public subnets used in launch templates ;
       k8s_labels = {
         Environment = local.environment
         dedicated   = "stream"
@@ -144,18 +144,18 @@ module "aws-eks-accelerator" {
       disk_type      = "gp2"
       subnet_ids     = module.aws_vpc.private_subnets # Define your private/public subnets list with comma seprated subnet_ids  = ['subnet1','subnet2','subnet3']
       additional_tags = {
-        ExtraTag = "bottlerocket"
+        ExtraTag = "amazonlinux"
         Name     = "${local.eks_cluster_id}-stream"
       }
       create_worker_security_group = true
     },
     brkt_m6i_app = {
-      node_group_name        = "brkt-app"
-      create_launch_template = true
-      ami_type               = "BOTTLEROCKET_x86_64"
-      launch_template_os     = "bottlerocket" # amazonlinux2eks  or bottlerocket or windows
-      capacity_type          = "ON_DEMAND"
-      public_ip              = false # Use this to enable public IP for EC2 instances; only for public subnets used in launch templates ;
+      node_group_name = "brkt-app"
+      # create_launch_template = true
+      # ami_type               = "BOTTLEROCKET_x86_64"
+      launch_template_os = "amazonlinux2eks" # amazonlinux2eks  or bottlerocket or windows
+      capacity_type      = "ON_DEMAND"
+      public_ip          = false # Use this to enable public IP for EC2 instances; only for public subnets used in launch templates ;
       k8s_labels = {
         Environment = local.environment
         dedicated   = "app"
@@ -168,18 +168,17 @@ module "aws-eks-accelerator" {
       disk_type      = "gp2"
       subnet_ids     = module.aws_vpc.private_subnets # Define your private/public subnets list with comma seprated subnet_ids  = ['subnet1','subnet2','subnet3']
       additional_tags = {
-        ExtraTag = "bottlerocket"
+        ExtraTag = "amazonlinux"
         Name     = "${local.eks_cluster_id}-app"
       }
       create_worker_security_group = true
     },
     brkt_m6i_addon = {
-      node_group_name        = "brkt-addon"
-      create_launch_template = true
-      ami_type               = "BOTTLEROCKET_x86_64"
-      launch_template_os     = "bottlerocket" # amazonlinux2eks  or bottlerocket or windows
-      capacity_type          = "ON_DEMAND"
-      public_ip              = false # Use this to enable public IP for EC2 instances; only for public subnets used in launch templates ;
+      node_group_name = "brkt-addon"
+      # create_launch_template = true
+      launch_template_os = "amazonlinux2eks" # amazonlinux2eks  or bottlerocket or windows
+      capacity_type      = "ON_DEMAND"
+      public_ip          = false # Use this to enable public IP for EC2 instances; only for public subnets used in launch templates ;
       k8s_labels = {
         Environment = local.environment
         dedicated   = "addon"
@@ -192,7 +191,7 @@ module "aws-eks-accelerator" {
       disk_type      = "gp2"
       subnet_ids     = module.aws_vpc.private_subnets # Define your private/public subnets list with comma seprated subnet_ids  = ['subnet1','subnet2','subnet3']
       additional_tags = {
-        ExtraTag = "bottlerocket"
+        ExtraTag = "amazonlinux"
         Name     = "${local.eks_cluster_id}-addon"
       }
       create_worker_security_group = true
