@@ -85,6 +85,21 @@ module "aws_eks" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
+# AWS EFS
+# ---------------------------------------------------------------------------------------------------------------------
+module "aws_efs" {
+  count  = var.create_eks && var.enable_efs_on_eks ? 1 : 0
+  source = "./modules/aws-efs"
+
+  vpc_id = var.vpc_id
+  subnet_id = one(var.private_subnet_ids)
+  eks_nodes_security_group = module.aws_eks.worker_security_group_id
+  tags = module.eks_tags.tags
+
+}
+
+
+# ---------------------------------------------------------------------------------------------------------------------
 # AWS Managed Prometheus Module
 # ---------------------------------------------------------------------------------------------------------------------
 module "aws_managed_prometheus" {

@@ -121,6 +121,13 @@ module "cluster_autoscaler" {
   manage_via_gitops = var.argocd_manage_add_ons
 }
 
+module "aws_efs_csi" {
+  count          = var.enable_amazon_eks_efs_csi ? 1 : 0
+  source         = "./aws-efs-csi-driver"
+  helm_config   = var.amazon_eks_efs_csi_helm_config
+  efs_file_system_id = var.efs_file_system_id
+}
+
 module "fargate_fluentbit" {
   count          = var.enable_fargate_fluentbit ? 1 : 0
   source         = "./fargate-fluentbit"

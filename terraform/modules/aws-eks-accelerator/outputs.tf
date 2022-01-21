@@ -125,3 +125,9 @@ output "amazon_prometheus_workspace_endpoint" {
   description = "Amazon Managed Prometheus Workspace Endpoint"
   value       = var.create_eks && var.enable_amazon_prometheus ? module.aws_managed_prometheus[0].amazon_prometheus_workspace_endpoint : null
 }
+
+output "aws_efs_id" {
+  description = "Amazon EFS file system id"
+  value       = var.create_eks && var.enable_efs_on_eks ? module.aws_efs.efs_id : null
+}
+

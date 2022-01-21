@@ -52,7 +52,11 @@ provider "aws" {
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.cluster.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
-  token                  = data.aws_eks_cluster_auth.cluster.token
+  exec {
+    api_version = "client.authentication.k8s.io/user"
+    args        = ["eks", "get-token", "--cluster-name", module.aws-eks-accelerator.eks_cluster_id]
+    command     = "aws"
+  }
 }
 
 provider "helm" {
@@ -121,6 +125,7 @@ module "aws-eks-accelerator" {
   # EKS CONTROL PLANE VARIABLES
   create_eks         = true
   kubernetes_version = local.kubernetes_version
+  enable_efs_on_eks  = true
 
   # Self-managed Node Group
   # Karpenter requires one node to get up and running
@@ -212,7 +217,9 @@ module "kubernetes-addons" {
   enable_amazon_eks_vpc_cni           = true
   enable_amazon_eks_coredns           = true
   enable_amazon_eks_kube_proxy        = true
+  enable_amazon_eks_efs_csi           = true
+  efs_file_system_id                  = module.aws-eks-accelerator.aws_efs_id
   enable_argocd                       = true
 
-  depends_on = [module.aws-eks-accelerator.managed_node_groups]
+  depends_on = [module.aws-eks-accelerator.managed_node_groups, module.aws-eks-accelerator.aws_efs_id]
 }

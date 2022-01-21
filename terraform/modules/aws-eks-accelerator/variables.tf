@@ -216,6 +216,13 @@ variable "emr_on_eks_teams" {
   default     = {}
 }
 
+#-----------Amazon EFS on EKS-------------
+variable "enable_efs_on_eks" {
+  type        = bool
+  default     = false
+  description = "Enable EFS on EKS"
+}
+
 #-----------TEAMS-------------
 variable "application_teams" {
   description = "Map of maps of Application Teams to create"

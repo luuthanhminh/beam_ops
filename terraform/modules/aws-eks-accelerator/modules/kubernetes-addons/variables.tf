@@ -175,6 +175,24 @@ variable "aws_load_balancer_controller_helm_config" {
   default     = {}
 }
 
+#-----------AWS EFS CSI-------------
+variable "enable_amazon_eks_efs_csi" {
+  type        = bool
+  default     = false
+  description = "Enable EFS CSI add-on"
+}
+
+variable "efs_file_system_id" {
+  type        = string
+  description = "EFS system item"
+}
+
+variable "amazon_eks_efs_csi_helm_config" {
+  description = "AWS EFF Chart config"
+  type        = any
+  default     = {}
+}
+
 #-----------NGINX-------------
 variable "enable_ingress_nginx" {
   type        = bool
