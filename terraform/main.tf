@@ -140,6 +140,7 @@ module "aws-eks-accelerator" {
       k8s_labels = {
         Environment = local.environment
         dedicated   = "stream"
+        zone-stream = "true"
       }
       max_size       = 2
       min_size       = 1
@@ -164,6 +165,7 @@ module "aws-eks-accelerator" {
       k8s_labels = {
         Environment = local.environment
         dedicated   = "app"
+        zone-api = "true"
       }
       max_size       = 2
       min_size       = 1

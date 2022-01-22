@@ -27,24 +27,38 @@ spec:
       serviceAccountName: {{ include "server-api.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: persistent-storage
+          persistentVolumeClaim:
+            claimName: {{ printf "%s-efs" .Chart.Name }}
+        - name: server-api-volume
+          persistentVolumeClaim:
+            claimName: {{ printf "%s-ebs" .Chart.Name }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: NODE_ENV
+              value: production
+          command: ['/bin/sh', '-c', 'cd /src/server-api/; node .']
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 4000
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            tcpSocket:
+              port: 4000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          volumeMounts:
+            - name: persistent-storage
+              mountPath: /src/dev/upload-output
+            - mountPath: /src/server-api-volume
+              name: server-api-volume
+              readOnly: false
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

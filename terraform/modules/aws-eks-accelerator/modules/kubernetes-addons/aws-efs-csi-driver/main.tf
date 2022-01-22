@@ -107,25 +107,6 @@ resource "helm_release" "aws-efs-csi-driver" {
   depends_on = [module.irsa_addon]
 }
 
-# resource "aws_iam_role" "aws_efs_csi_driver" {
-#   name = "aws_efs_csi_role"
-
-#   assume_role_policy = <<EOF
-# {
-#   "Version": "2012-10-17",
-#   "Statement": [
-#     {
-#       "Action": "sts:AssumeRole",
-#       "Principal": {
-#         "Service": "eks.amazonaws.com"
-#       },
-#       "Effect": "Allow",
-#       "Sid": ""
-#     }
-#   ]
-# }
-# EOF
-# }
 
 module "irsa_addon" {
   source                            = "../../../modules/irsa"
