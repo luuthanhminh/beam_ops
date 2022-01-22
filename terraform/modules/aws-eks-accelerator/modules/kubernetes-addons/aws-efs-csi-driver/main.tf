@@ -76,31 +76,65 @@ resource "helm_release" "aws-efs-csi-driver" {
 
   set {
     name  = "controller.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = aws_iam_role.aws_efs_csi_driver.arn
+    value = module.irsa_addon.irsa_iam_role_arn
     type  = "string"
   }
 
+  set {
+    name  = "controller.serviceAccount.name"
+    value = local.helm_config["controller_service_account"]
+    type  = "string"
+  }
 
+    set {
+    name  = "node.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = module.irsa_addon.irsa_iam_role_arn
+    type  = "string"
+  }
+
+  set {
+    name  = "node.serviceAccount.name"
+    value = local.helm_config["node_service_account"]
+    type  = "string"
+  }
+
+  set {
+    name  = "storageClasses[0].parameters.fileSystemId"
+    value = var.efs_file_system_id
+    type  = "string"
+  }
+
+  depends_on = [module.irsa_addon]
 }
 
-resource "aws_iam_role" "aws_efs_csi_driver" {
-  name = "aws_efs_csi_role"
+# resource "aws_iam_role" "aws_efs_csi_driver" {
+#   name = "aws_efs_csi_role"
 
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "eks.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
+#   assume_role_policy = <<EOF
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Action": "sts:AssumeRole",
+#       "Principal": {
+#         "Service": "eks.amazonaws.com"
+#       },
+#       "Effect": "Allow",
+#       "Sid": ""
+#     }
+#   ]
+# }
+# EOF
+# }
+
+module "irsa_addon" {
+  source                            = "../../../modules/irsa"
+  create_kubernetes_namespace       = false
+  create_kubernetes_service_account = false
+  eks_cluster_id                    = var.eks_cluster_id
+  kubernetes_namespace              = local.helm_config["namespace"]
+  kubernetes_service_account        = local.helm_config["controller_service_account"]
+  irsa_iam_policies                 = concat([aws_iam_policy.aws_efs_csi_driver.arn])
 }
 
 resource "aws_iam_policy" "aws_efs_csi_driver" {
@@ -109,40 +143,3 @@ resource "aws_iam_policy" "aws_efs_csi_driver" {
   policy      = data.aws_iam_policy_document.aws-efs-csi-driver.json
 }
 
-resource "aws_iam_policy_attachment" "aws_efs_csi_driver" {
-  name       = "aws_efs_csi_driver-attachment"
-  roles      = [aws_iam_role.aws_efs_csi_driver.name]
-  policy_arn = aws_iam_policy.aws_efs_csi_driver.arn
-}
-
-resource "kubernetes_storage_class" "efs-sc" {
-  metadata {
-    name = "efs-sc"
-  }
-  storage_provisioner = "efs.csi.aws.com"
-}
-
-resource "kubernetes_persistent_volume" "efs-pv" {
-  metadata {
-    name = "efs-pv"
-  }
-  spec {
-    capacity = {
-      storage = "20Gi"
-    }
-    access_modes       = ["ReadWriteMany"]
-    storage_class_name = "efs-sc"
-    volume_mode        = "Filesystem"
-    persistent_volume_source {
-      csi {
-        driver        = "efs.csi.aws.com"
-        volume_handle = var.efs_file_system_id
-      }
-    }
-
-  }
-
-
-
-  depends_on = [kubernetes_storage_class.efs-sc]
-}

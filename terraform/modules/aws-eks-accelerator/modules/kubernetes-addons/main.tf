@@ -126,6 +126,7 @@ module "aws_efs_csi" {
   source         = "./aws-efs-csi-driver"
   helm_config   = var.amazon_eks_efs_csi_helm_config
   efs_file_system_id = var.efs_file_system_id
+  eks_cluster_id    = var.eks_cluster_id
 }
 
 module "fargate_fluentbit" {

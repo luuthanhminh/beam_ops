@@ -6,7 +6,7 @@ locals {
     name                       = "aws-efs-csi-driver"
     chart                      = "aws-efs-csi-driver"
     repository                 = "https://kubernetes-sigs.github.io/aws-efs-csi-driver"
-    version                    = "2.2.1"
+    version                    = "2.2.2"
     namespace                  = "kube-system"
     timeout                    = "1200"
     create_namespace           = true
@@ -38,6 +38,8 @@ locals {
     replace                    = false
     description                = "The AWS EFS Helm Chartconfiguration"
     postrender                 = ""
+    controller_service_account = "efs-csi-controller-sa"
+    node_service_account = "efs-csi-node-sa"
   }
 
   helm_config = merge(
