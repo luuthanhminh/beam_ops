@@ -128,6 +128,6 @@ output "amazon_prometheus_workspace_endpoint" {
 
 output "aws_efs_id" {
   description = "Amazon EFS file system id"
-  value       = var.create_eks && var.enable_efs_on_eks ? module.aws_efs.efs_id : null
+  value       = var.create_eks && var.enable_efs_on_eks ? module.aws_efs[0].efs_id : null
 }
 

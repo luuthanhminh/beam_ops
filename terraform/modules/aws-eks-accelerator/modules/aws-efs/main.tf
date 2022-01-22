@@ -30,7 +30,7 @@ resource "aws_efs_file_system" "efs" {
 }
 
 
-resource "aws_efs_mount_target" "efs-mt" {
+resource "aws_efs_mount_target" "efs-mount-target" {
   count           = length(data.aws_availability_zones.available.names)
   file_system_id  = aws_efs_file_system.efs.id
   subnet_id       = var.subnet_id
