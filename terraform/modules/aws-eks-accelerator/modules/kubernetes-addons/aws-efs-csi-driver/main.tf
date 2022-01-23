@@ -86,7 +86,7 @@ resource "helm_release" "aws-efs-csi-driver" {
     type  = "string"
   }
 
-    set {
+  set {
     name  = "node.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value = module.irsa_addon.irsa_iam_role_arn
     type  = "string"

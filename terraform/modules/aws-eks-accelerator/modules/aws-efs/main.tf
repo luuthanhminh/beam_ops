@@ -28,3 +28,9 @@ resource "aws_efs_file_system" "efs" {
   encrypted        = "true"
   tags             = var.tags
 }
+
+resource "aws_efs_mount_target" "efs-appmt" {
+   file_system_id  = aws_efs_file_system.efs.id
+   subnet_id = var.subnet_id
+   security_groups = [aws_security_group.efs.id]
+ }

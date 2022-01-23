@@ -120,16 +120,7 @@ node:
     #  eks.amazonaws.com/role-arn: arn:aws:iam::111122223333:role/efs-csi-role
   healthPort: 9809
 
-storageClasses:
+storageClasses: 
 - name: efs-sc
-  mountOptions:
-  - tls
-  parameters:
-    provisioningMode: efs-ap
-    fileSystemId: fs-1122aabb
-    directoryPerms: "700"
-    gidRangeStart: "1000"
-    gidRangeEnd: "2000"
-    basePath: "/dynamic_provisioning"
   reclaimPolicy: Retain
   volumeBindingMode: Immediate
