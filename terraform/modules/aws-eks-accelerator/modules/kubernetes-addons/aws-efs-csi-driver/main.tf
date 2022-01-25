@@ -87,18 +87,6 @@ resource "helm_release" "aws-efs-csi-driver" {
   }
 
   set {
-    name  = "node.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = module.irsa_addon.irsa_iam_role_arn
-    type  = "string"
-  }
-
-  set {
-    name  = "node.serviceAccount.name"
-    value = local.helm_config["node_service_account"]
-    type  = "string"
-  }
-
-  set {
     name  = "storageClasses[0].parameters.fileSystemId"
     value = var.efs_file_system_id
     type  = "string"

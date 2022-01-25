@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: 'nginx'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/enable-access-log: 'true'
+    nginx.ingress.kubernetes.io/proxy-body-size: '4096m'
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      access_log /var/log/nginx/access.log upstreaminfo  if=$loggable;
+  name: demo-beam
+  namespace: services
+spec:
+  rules:
+    - host: demo.beam.to
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: server-api
+                port:
+                  number: 80
+          - path: /upload/
+            pathType: Prefix
+            backend:
+              service:
+                name: mixer-nginx
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: react-app
+                port:
+                  number: 80

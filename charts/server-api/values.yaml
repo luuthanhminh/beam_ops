@@ -8,7 +8,7 @@ image:
   repository: 462068371076.dkr.ecr.eu-west-2.amazonaws.com/beam/server-api
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "alpha-53"
+  tag: "demo-11"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -87,3 +87,5 @@ nodeSelector:
 tolerations: []
 
 affinity: {}
+
+efsVolumeClaim: beam-efs-pvc

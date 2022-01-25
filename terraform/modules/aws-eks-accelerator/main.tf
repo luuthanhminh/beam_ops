@@ -92,8 +92,9 @@ module "aws_efs" {
   source = "./modules/aws-efs"
 
   vpc_id = var.vpc_id
-  subnet_id = element(var.private_subnet_ids,0)
+  private_subnet_ids = var.private_subnet_ids
   eks_nodes_security_group = module.aws_eks.worker_security_group_id
+  eks_cluster_security_group = module.aws_eks.cluster_primary_security_group_id
   tags = module.eks_tags.tags
 
 }

@@ -36,7 +36,7 @@ spec:
                 path: nginx.conf
         - name: persistent-storage
           persistentVolumeClaim:
-            claimName: {{ include "mixer-nginx.fullname" . }}
+            claimName: {{ .Values.efsVolumeClaim }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -47,14 +47,6 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
           volumeMounts:
             - name: server-mixer-nginx
               mountPath: /etc/nginx/nginx.conf

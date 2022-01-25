@@ -23,3 +23,15 @@ resource "aws_iam_role_policy_attachment" "managed_ng" {
   policy_arn = each.key
   role       = aws_iam_role.managed_ng.name
 }
+
+resource "aws_iam_role_policy_attachment" "efs_attachment" {
+  policy_arn = aws_iam_policy.aws_efs.arn
+  role       = aws_iam_role.managed_ng.name
+}
+
+resource "aws_iam_policy" "aws_efs" {
+  description = "IAM Policy for AWS EFS "
+  policy      = data.aws_iam_policy_document.aws-efs.json
+}
+
+

@@ -23,6 +23,12 @@ variable "zone" {
   default     = "ops"
 }
 
+variable "project" {
+  type        = string
+  description = "Application project: Beam, ICR...."
+  default     = "Minh"
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}

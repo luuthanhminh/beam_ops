@@ -77,3 +77,5 @@ nodeSelector:
 tolerations: []
 
 affinity: {}
+
+efsVolumeClaim: beam-efs-pvc

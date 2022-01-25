@@ -30,7 +30,7 @@ spec:
       volumes:
         - name: persistent-storage
           persistentVolumeClaim:
-            claimName: {{ printf "%s-efs" .Chart.Name }}
+            claimName: {{ .Values.efsVolumeClaim }}
         - name: server-api-volume
           persistentVolumeClaim:
             claimName: {{ printf "%s-ebs" .Chart.Name }}
