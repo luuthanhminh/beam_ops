@@ -122,11 +122,11 @@ module "cluster_autoscaler" {
 }
 
 module "aws_efs_csi" {
-  count          = var.enable_amazon_eks_efs_csi ? 1 : 0
-  source         = "./aws-efs-csi-driver"
-  helm_config   = var.amazon_eks_efs_csi_helm_config
+  count              = var.enable_amazon_eks_efs_csi ? 1 : 0
+  source             = "./aws-efs-csi-driver"
+  helm_config        = var.amazon_eks_efs_csi_helm_config
   efs_file_system_id = var.efs_file_system_id
-  eks_cluster_id    = var.eks_cluster_id
+  eks_cluster_id     = var.eks_cluster_id
 }
 
 module "fargate_fluentbit" {
@@ -181,6 +181,14 @@ module "prometheus" {
   amazon_prometheus_workspace_endpoint = var.amazon_prometheus_workspace_endpoint
   manage_via_gitops                    = var.argocd_manage_add_ons
   tags                                 = var.tags
+}
+
+module "grafana" {
+  count             = var.enable_grafana ? 1 : 0
+  source            = "./grafana"
+  eks_cluster_id    = var.eks_cluster_id
+  helm_config       = var.grafana_helm_config
+  manage_via_gitops = var.argocd_manage_add_ons
 }
 
 module "spark_k8s_operator" {

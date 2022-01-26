@@ -1,0 +1,13 @@
+grafana.ini:
+  server:
+    domain: monitoring.beam.to
+    root_url: "%(protocol)s://%(domain)s/grafana"
+    serve_from_sub_path: true
+ingress:
+  enabled: true
+  hosts:
+    - "monitoring.beam.to"
+  path: "/grafana"
+
+nodeSelector:
+  kubernetes.io/os: ${operating_system}

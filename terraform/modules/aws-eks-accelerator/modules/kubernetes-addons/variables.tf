@@ -123,6 +123,19 @@ variable "prometheus_helm_config" {
   default     = {}
 }
 
+#-----------GRAFANA-------------
+variable "enable_grafana" {
+  description = "Enable Community Grafana add-on"
+  type        = bool
+  default     = false
+}
+
+variable "grafana_helm_config" {
+  description = "Community Grafana Helm Chart config"
+  type        = any
+  default     = {}
+}
+
 #-----------METRIC SERVER-------------
 variable "enable_metrics_server" {
   type        = bool

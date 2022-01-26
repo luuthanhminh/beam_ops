@@ -36,13 +36,6 @@ data "aws_eks_cluster" "cluster" {
   ]
 }
 
-data "aws_eks_cluster_auth" "cluster" {
-  name = module.aws-eks-accelerator.eks_cluster_id
-  depends_on = [
-    module.aws-eks-accelerator.eks_cluster_id
-  ]
-}
-
 provider "aws" {
   region                  = "eu-west-2"
   profile                 = "beam"
@@ -70,8 +63,12 @@ provider "kubernetes" {
 provider "helm" {
   kubernetes {
     host                   = data.aws_eks_cluster.cluster.endpoint
-    token                  = data.aws_eks_cluster_auth.cluster.token
     cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
+    exec {
+      api_version = "client.authentication.k8s.io/v1alpha1"
+      args        = ["eks", "get-token", "--cluster-name", data.aws_eks_cluster.cluster.id, "--profile", "beam"]
+      command     = "aws"
+    }
   }
 }
 
@@ -248,7 +245,14 @@ module "kubernetes-addons" {
   enable_karpenter      = true
   enable_metrics_server = true
 
-  enable_prometheus                   = true
+  enable_prometheus = false
+  prometheus_helm_config = {
+    "namespace" = "monitoring"
+  }
+  enable_grafana = false
+  grafana_helm_config = {
+    "namespace" = "monitoring"
+  }
   enable_aws_load_balancer_controller = false
   enable_amazon_eks_vpc_cni           = true
   enable_amazon_eks_coredns           = true
