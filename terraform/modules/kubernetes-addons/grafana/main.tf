@@ -64,8 +64,16 @@ resource "helm_release" "grafana" {
     for_each = var.ingress_annotations
 
     content {
-      name  = "ingress.annotations.${each.key}"
-      value = each.value
+      name  = "ingress.annotations.${set.key}"
+      value = set.value
+    }
+  }
+  dynamic "set" {
+    for_each = var.node_selector
+
+    content {
+      name  = "nodeSelector.${set.key}"
+      value = set.value
     }
   }
 }

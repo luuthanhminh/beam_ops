@@ -25,5 +25,9 @@ module "kubernetes-addons" {
   efs_file_system_id                  = local.efs_id
   enable_argocd                       = true
 
+  node_selector = {
+    "dedicated" = "addon"
+  }
+
   depends_on = [module.eks.cluster_id]
 }

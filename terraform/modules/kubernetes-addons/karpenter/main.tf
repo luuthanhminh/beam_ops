@@ -47,6 +47,15 @@ resource "helm_release" "karpenter" {
     }
   }
 
+  dynamic "set" {
+    for_each = var.node_selector
+
+    content {
+      name  = "controller.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
+
   dynamic "set_sensitive" {
     iterator = each_item
     for_each = local.helm_config["set_sensitive"] == null ? [] : local.helm_config["set_sensitive"]

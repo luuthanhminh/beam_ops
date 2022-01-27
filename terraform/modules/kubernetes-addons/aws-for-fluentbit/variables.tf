@@ -43,3 +43,8 @@ variable "irsa_policies" {
   description = "Additional IAM policies for a IAM role for service accounts"
   default     = []
 }
+
+variable "node_selector" {
+  type    = map(any)
+  default = {}
+}

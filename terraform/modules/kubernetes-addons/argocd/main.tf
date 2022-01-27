@@ -63,6 +63,38 @@ resource "helm_release" "argocd" {
       value = each_item.value.value
     }
   }
+  dynamic "set" {
+    for_each = var.node_selector
+
+    content {
+      name  = "server.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
+  dynamic "set" {
+    for_each = var.node_selector
+
+    content {
+      name  = "controller.nodeselector.${set.key}"
+      value = set.value
+    }
+  }
+  dynamic "set" {
+    for_each = var.node_selector
+
+    content {
+      name  = "dex.nodeselector.${set.key}"
+      value = set.value
+    }
+  }
+  dynamic "set" {
+    for_each = var.node_selector
+
+    content {
+      name  = "redis.nodeselector.${set.key}"
+      value = set.value
+    }
+  }
 
   dynamic "set_sensitive" {
     iterator = each_item

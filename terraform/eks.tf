@@ -28,7 +28,9 @@ module "eks" {
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = concat(module.vpc.public_subnets, module.vpc.private_subnets)
-  tags       = local.tags
+  tags = merge(local.tags, {
+    "karpenter.sh/discovery" = local.eks_cluster_name
+  })
 
   eks_managed_node_groups = {
     mng_addon = {
@@ -38,9 +40,9 @@ module "eks" {
 
       min_size     = 1
       max_size     = 10
-      desired_size = 1
+      desired_size = 2
 
-      instance_types = ["t3.large"]
+      instance_types = ["m6i.xlarge"]
       capacity_type  = "ON_DEMAND"
       labels = {
         dedicated = "addon"

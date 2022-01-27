@@ -409,3 +409,9 @@ variable "yunikorn_helm_config" {
   default     = {}
   description = "YuniKorn K8s scheduler Helm Chart config"
 }
+
+variable "node_selector" {
+  type    = map(any)
+  default = {}
+}
+

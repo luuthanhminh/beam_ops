@@ -31,3 +31,8 @@ variable "eks_cluster_id" {
   type        = string
   description = "EKS Cluster Id"
 }
+
+variable "node_selector" {
+  type    = map(any)
+  default = {}
+}

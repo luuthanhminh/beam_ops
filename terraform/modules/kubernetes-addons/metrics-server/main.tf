@@ -65,6 +65,15 @@ resource "helm_release" "metrics_server" {
     }
   }
 
+  dynamic "set" {
+    for_each = var.node_selector
+
+    content {
+      name  = "nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
+
   dynamic "set_sensitive" {
     iterator = each_item
     for_each = local.helm_config["set_sensitive"] == null ? [] : local.helm_config["set_sensitive"]

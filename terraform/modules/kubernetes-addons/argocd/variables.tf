@@ -38,3 +38,8 @@ variable "add_on_config" {
   default     = {}
   description = "Configuration for managing add-ons via ArgoCD"
 }
+
+variable "node_selector" {
+  type    = map(any)
+  default = {}
+}

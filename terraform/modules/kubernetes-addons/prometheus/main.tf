@@ -74,6 +74,46 @@ resource "helm_release" "prometheus" {
       value = each_item.value.value
     }
   }
+  dynamic "set" {
+    for_each = var.node_selector
+
+    content {
+      name  = "nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
+  dynamic "set" {
+    for_each = var.node_selector
+
+    content {
+      name  = "server.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
+  dynamic "set" {
+    for_each = var.node_selector
+
+    content {
+      name  = "alertmanager.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
+  dynamic "set" {
+    for_each = var.node_selector
+
+    content {
+      name  = "pushgateway.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
+  dynamic "set" {
+    for_each = var.node_selector
+
+    content {
+      name  = "kube-state-metrics.nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
 
   depends_on = [kubernetes_namespace_v1.prometheus]
 

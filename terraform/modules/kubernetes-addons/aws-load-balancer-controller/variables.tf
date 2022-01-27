@@ -37,3 +37,8 @@ variable "tags" {
   type        = map(string)
   description = "Common Tags for AWS resources"
 }
+
+variable "node_selector" {
+  type    = map(any)
+  default = {}
+}

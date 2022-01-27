@@ -14,3 +14,8 @@ variable "helm_config" {
   default     = {}
   description = "Helm chart config"
 }
+
+variable "node_selector" {
+  type    = map(any)
+  default = {}
+}
