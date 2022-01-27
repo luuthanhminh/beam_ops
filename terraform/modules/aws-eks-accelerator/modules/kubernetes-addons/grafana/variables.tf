@@ -8,6 +8,19 @@ variable "eks_cluster_id" {
   description = "EKS Cluster Id"
 }
 
+variable "enabled_ingress" {
+  default = false
+}
+
+variable "ingress_domain" {
+  default = "monitoring.beam.to"
+}
+
+variable "ingress_annotations" {
+  type = map(any)
+  default = {}
+}
+
 variable "manage_via_gitops" {
   type        = bool
   default     = false

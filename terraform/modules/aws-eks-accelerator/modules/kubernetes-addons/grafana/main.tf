@@ -46,5 +46,27 @@ resource "helm_release" "grafana" {
       value = each_item.value.value
     }
   }
+
+  set {
+    name = "ingress.enabled"
+    value = var.enabled_ingress
+  }
+  
+  set {
+    name = "grafana\\.ini.server.domain"
+    value = var.ingress_domain
+  }
+  set {
+    name = "ingress.hosts[0]"
+    value = var.ingress_domain
+  }
+  dynamic "set" {
+    for_each = var.ingress_annotations
+
+    content {
+      name  = "ingress.annotations.${each.key}" 
+      value = each.value
+    }
+  }
 }
 

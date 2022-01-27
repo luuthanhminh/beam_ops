@@ -136,6 +136,19 @@ variable "grafana_helm_config" {
   default     = {}
 }
 
+variable "grafana_enabled_ingress" {
+  default = false
+}
+
+variable "grafana_ingress_domain" {
+  default = "monitoring.beam.to"
+}
+
+variable "grafana_ingress_annotations" {
+  type = map(any)
+  default = {}
+}
+
 #-----------METRIC SERVER-------------
 variable "enable_metrics_server" {
   type        = bool
