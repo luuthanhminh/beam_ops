@@ -13,7 +13,7 @@ variable "tenant" {
 
 variable "environment" {
   type        = string
-  default     = "testing"
+  default     = "dev"
   description = "Environment area, e.g. prod or preprod "
 }
 

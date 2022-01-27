@@ -13,14 +13,16 @@ module "eks" {
     coredns = {
       resolve_conflicts = "OVERWRITE"
     }
-    kube-proxy = {}
+    kube-proxy = {
+      resolve_conflicts = "OVERWRITE"
+    }
     vpc-cni = {
       resolve_conflicts = "OVERWRITE"
     }
   }
 
   cluster_encryption_config = [{
-    provider_key_arn = "ac01234b-00d9-40f6-ac95-e42345f78b00"
+    provider_key_arn = aws_kms_key.key.arn
     resources        = ["secrets"]
   }]
 
@@ -29,23 +31,25 @@ module "eks" {
   tags       = local.tags
 
   eks_managed_node_groups = {
-    node_group_name = "mng-addon"
+    mng_addon = {
+      node_group_name = "mng-addon"
 
-    subnet_ids = module.vpc.private_subnets
+      subnet_ids = module.vpc.private_subnets
 
-    min_size     = 1
-    max_size     = 10
-    desired_size = 1
+      min_size     = 1
+      max_size     = 10
+      desired_size = 1
 
-    instance_types = ["t3.large"]
-    capacity_type  = "ON_DEMAND"
-    labels = {
-      dedicated = "addon"
+      instance_types = ["t3.large"]
+      capacity_type  = "ON_DEMAND"
+      labels = {
+        dedicated = "addon"
+      }
+
+      tags = merge(local.tags, {
+        Name = "mng-addon"
+      })
     }
-
-    tags = merge(local.tags, {
-      Name = "mng-addon"
-    })
   }
 }
 
