@@ -13,7 +13,7 @@ variable "tenant" {
 
 variable "environment" {
   type        = string
-  default     = "dev"
+  default     = "testing"
   description = "Environment area, e.g. prod or preprod "
 }
 
@@ -41,6 +41,10 @@ variable "terraform_version" {
   description = "Terraform version"
 }
 
+variable "azs" {
+  default = ["eu-west-2a", "eu-west-2b", "eu-west-2c"]
+}
+
 # VPC Config for EKS Cluster
 variable "vpc_cidr" {
   type        = string
@@ -55,7 +59,7 @@ variable "create_eks" {
   description = "Create EKS cluster"
 }
 
-variable "kubernetes_version" {
+variable "k8s_version" {
   type        = string
   default     = "1.21"
   description = "Desired kubernetes version. If you do not specify a value, the latest available version is used"
@@ -180,3 +184,8 @@ variable "amazon_prometheus_workspace_alias" {
   default     = null
   description = "AWS Managed Prometheus WorkSpace Name"
 }
+
+variable "enable_efs_on_eks" {
+  default = true
+}
+
