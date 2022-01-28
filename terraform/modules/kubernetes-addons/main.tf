@@ -199,12 +199,15 @@ module "prometheus" {
 }
 
 module "grafana" {
-  count             = var.enable_grafana ? 1 : 0
-  source            = "./grafana"
-  eks_cluster_id    = var.eks_cluster_id
-  helm_config       = var.grafana_helm_config
-  manage_via_gitops = var.argocd_manage_add_ons
-  node_selector     = var.node_selector
+  count               = var.enable_grafana ? 1 : 0
+  source              = "./grafana"
+  eks_cluster_id      = var.eks_cluster_id
+  helm_config         = var.grafana_helm_config
+  manage_via_gitops   = var.argocd_manage_add_ons
+  node_selector       = var.node_selector
+  enabled_ingress     = var.grafana_enabled_ingress
+  ingress_annotations = var.grafana_ingress_annotations
+  ingress_domain      = var.grafana_ingress_domain
 }
 
 module "spark_k8s_operator" {
