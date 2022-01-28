@@ -82,7 +82,7 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 nodeSelector:
-  zone-api: 'true'
+  zone-app: 'true'
 
 tolerations: []
 
