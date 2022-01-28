@@ -17,13 +17,14 @@ module "kubernetes-addons" {
   }
   grafana_enabled_ingress = true
 
-  enable_aws_load_balancer_controller = false
-  enable_amazon_eks_vpc_cni           = false
-  enable_amazon_eks_coredns           = false
-  enable_amazon_eks_kube_proxy        = false
-  enable_amazon_eks_efs_csi           = true
-  efs_file_system_id                  = local.efs_id
-  enable_argocd                       = true
+  enable_aws_load_balancer_controller  = false
+  enable_amazon_eks_vpc_cni            = false
+  enable_amazon_eks_coredns            = false
+  enable_amazon_eks_kube_proxy         = false
+  enable_amazon_eks_efs_csi            = true
+  enable_amazon_eks_aws_ebs_csi_driver = true
+  efs_file_system_id                   = local.efs_id
+  enable_argocd                        = true
 
   node_selector = {
     "dedicated" = "addon"

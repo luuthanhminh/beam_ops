@@ -68,8 +68,9 @@ module "eks_ng_mixer" {
   cluster_name    = module.eks.cluster_id
   cluster_version = local.k8s_version
 
-  vpc_id     = module.vpc.vpc_id
-  subnet_ids = module.vpc.private_subnets
+  vpc_id                 = module.vpc.vpc_id
+  vpc_security_group_ids = [aws_security_group.node_mediasoup.id]
+  subnet_ids             = module.vpc.private_subnets
 
   min_size     = 1
   max_size     = 10
