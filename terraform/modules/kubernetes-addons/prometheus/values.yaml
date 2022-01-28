@@ -19,6 +19,10 @@ alertmanager:
 kube-state-metrics:
   nodeSelector:
     kubernetes.io/os: ${operating_system}
+  metricLabelsAllowlist:
+    - pods=[*]
+    - nodes=[*]
+    - deployments=[*]
 
 nodeExporter:
   nodeSelector:
