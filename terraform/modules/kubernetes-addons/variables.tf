@@ -10,6 +10,7 @@ variable "eks_worker_security_group_id" {
 variable "eks_worker_iam_role_name" {
   type        = string
   description = "EKS worker role name"
+  default = ""
 }
 
 variable "auto_scaling_group_names" {

@@ -56,6 +56,16 @@ resource "helm_release" "cluster_autoscaler" {
       value = each_item.value.value
     }
   }
+
+    dynamic "set" {
+    for_each = var.node_selector
+
+    content {
+      name  = "nodeSelector.${set.key}"
+      value = set.value
+    }
+  }
+
   depends_on = [module.irsa]
 }
 
