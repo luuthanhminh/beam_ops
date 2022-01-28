@@ -53,7 +53,7 @@ module "eks_ng_media" {
   labels = {
     dedicated      = "media-server"
     zone-mediasoup = "true"
-    app_role = "mediasoup"
+    app_role       = "mediasoup"
   }
 
   tags = merge(local.tags, {

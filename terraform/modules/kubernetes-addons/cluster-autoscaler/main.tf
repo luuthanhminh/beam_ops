@@ -57,7 +57,7 @@ resource "helm_release" "cluster_autoscaler" {
     }
   }
 
-    dynamic "set" {
+  dynamic "set" {
     for_each = var.node_selector
 
     content {

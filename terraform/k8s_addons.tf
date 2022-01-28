@@ -4,9 +4,9 @@ module "kubernetes-addons" {
   eks_cluster_id = module.eks.cluster_id
 
   #K8s Add-ons
-  enable_karpenter      = false
+  enable_karpenter          = false
   enable_cluster_autoscaler = true
-  enable_metrics_server = true
+  enable_metrics_server     = true
 
   enable_prometheus = true
   prometheus_helm_config = {
