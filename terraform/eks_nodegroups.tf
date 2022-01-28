@@ -20,7 +20,7 @@ module "eks_ng_app" {
 
   labels = {
     dedicated = "app"
-    zone-app = "true"
+    zone-app  = "true"
   }
 
   tags = merge(local.tags, {
@@ -49,7 +49,7 @@ module "eks_ng_media" {
   capacity_type  = "ON_DEMAND"
 
   labels = {
-    dedicated = "media-server"
+    dedicated      = "media-server"
     zone-mediasoup = "true"
   }
 
@@ -79,7 +79,7 @@ module "eks_ng_mixer" {
   capacity_type  = "ON_DEMAND"
 
   labels = {
-    dedicated = "mixer-process"
+    dedicated  = "mixer-process"
     zone-mixer = "true"
   }
 

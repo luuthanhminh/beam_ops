@@ -23,13 +23,13 @@ provider "aws" {
 
 
 provider "kubernetes" {
-  config_path = "~/.kube/config"
+  config_path    = "~/.kube/config"
   config_context = "arn:aws:eks:eu-west-2:462068371076:cluster/462068371076-dev-ops-eks"
 }
 
 provider "helm" {
   kubernetes {
-    config_path = "~/.kube/config"
+    config_path    = "~/.kube/config"
     config_context = "arn:aws:eks:eu-west-2:462068371076:cluster/462068371076-dev-ops-eks"
   }
 }

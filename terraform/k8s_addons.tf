@@ -29,5 +29,7 @@ module "kubernetes-addons" {
     "dedicated" = "addon"
   }
 
-  depends_on = [module.eks.cluster_id]
+  tags = local.tags
+
+  depends_on = [module.eks.cluster_id, module.efs]
 }
