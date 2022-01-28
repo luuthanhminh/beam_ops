@@ -16,6 +16,13 @@ module "kubernetes-addons" {
     "namespace" = "monitoring"
   }
   grafana_enabled_ingress = true
+  grafana_ingress_annotations = {
+    "kubernetes.io/ingress.class"                    = "nginx"
+    "nginx.ingress.kubernetes.io/enable-access-log"  = "true"
+    "nginx.ingress.kubernetes.io/force-ssl-redirect" = "true"
+    "nginx.ingress.kubernetes.io/proxy-body-size"    = "4096m"
+    "nginx.ingress.kubernetes.io/ssl-redirect"       = "false"
+  }
 
   enable_aws_load_balancer_controller  = false
   enable_amazon_eks_vpc_cni            = false
