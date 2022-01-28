@@ -2,7 +2,7 @@
 #   source  = "terraform-aws-modules/eks/aws//modules/eks-managed-node-group"
 #   version = "18.2.3"
 
-#   name            = "mng-addon"
+#   name            = "mng-addon-linux"
 #   cluster_name    = module.eks.cluster_id
 #   cluster_version = local.k8s_version
 
@@ -21,7 +21,7 @@
 #   }
 
 #   tags = merge(local.tags, {
-#     Name = "mng-addon"
+#     Name = "mng-addon-linux"
 #   })
 #   depends_on = [module.eks.cluster_id]
 # }
