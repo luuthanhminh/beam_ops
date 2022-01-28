@@ -16,7 +16,7 @@ locals {
   eks_cluster_name = join("-", [local.name, "eks"])
 
 
-  efs_id = var.create_eks && var.enable_efs_on_eks ? module.efs[0].efs_id : null
+  efs_id = var.enable_efs_on_eks ? module.efs[0].efs_id : null
 
   tags = {
     tenant            = local.tenant

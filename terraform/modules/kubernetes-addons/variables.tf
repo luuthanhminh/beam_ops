@@ -7,6 +7,11 @@ variable "eks_worker_security_group_id" {
   default     = ""
 }
 
+variable "eks_worker_iam_role_name" {
+  type        = string
+  description = "EKS worker role name"
+}
+
 variable "auto_scaling_group_names" {
   description = "List of self-managed node groups autoscaling group names"
   default     = []

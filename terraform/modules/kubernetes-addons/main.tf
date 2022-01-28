@@ -162,6 +162,7 @@ module "karpenter" {
   tags              = var.tags
   manage_via_gitops = var.argocd_manage_add_ons
   node_selector     = var.node_selector
+  eks_worker_iam_role_name = var.eks_worker_iam_role_name
 }
 
 module "keda" {

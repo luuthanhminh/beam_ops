@@ -40,3 +40,7 @@ data "aws_iam_policy_document" "karpenter" {
     }
   }
 }
+
+data "aws_iam_policy" "ssm_managed_instance" {
+  arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}

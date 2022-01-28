@@ -9,6 +9,11 @@ variable "eks_cluster_id" {
   description = "EKS cluster Id"
 }
 
+variable "eks_worker_iam_role_name" {
+  type        = string
+  description = "EKS worker role name"
+}
+
 variable "irsa_policies" {
   type        = list(string)
   description = "Additional IAM policies for a IAM role for service accounts"

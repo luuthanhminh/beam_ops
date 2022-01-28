@@ -5,6 +5,7 @@ module "kubernetes-addons" {
 
   #K8s Add-ons
   enable_karpenter      = true
+  eks_worker_iam_role_name = module.eks.cluster_iam_role_name
   enable_metrics_server = true
 
   enable_prometheus = true

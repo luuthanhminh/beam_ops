@@ -1,4 +1,6 @@
 
+
+
 // Node group for common application
 module "eks_ng_app" {
   source  = "terraform-aws-modules/eks/aws//modules/eks-managed-node-group"
@@ -51,6 +53,7 @@ module "eks_ng_media" {
   labels = {
     dedicated      = "media-server"
     zone-mediasoup = "true"
+    app_role = "mediasoup"
   }
 
   tags = merge(local.tags, {
@@ -89,3 +92,39 @@ module "eks_ng_mixer" {
   })
   depends_on = [module.eks.cluster_id]
 }
+
+// additional policies
+resource "aws_iam_policy" "aws_efs" {
+  description = "IAM Policy for AWS EFS"
+  name        = "${local.eks_cluster_name}-efs-policy"
+  policy      = data.aws_iam_policy_document.aws-efs.json
+}
+
+resource "aws_iam_role_policy_attachment" "additional" {
+  for_each = module.eks.eks_managed_node_groups
+
+  policy_arn = aws_iam_policy.aws_efs.arn
+  role       = each.value.iam_role_name
+}
+
+
+resource "aws_iam_role_policy_attachment" "eks_ng_mixer_additional" {
+
+  policy_arn = aws_iam_policy.aws_efs.arn
+  role       = module.eks_ng_mixer.iam_role_name
+}
+
+resource "aws_iam_role_policy_attachment" "eks_ng_media_additional" {
+
+  policy_arn = aws_iam_policy.aws_efs.arn
+  role       = module.eks_ng_media.iam_role_name
+
+}
+
+resource "aws_iam_role_policy_attachment" "eks_ng_app_additional" {
+
+  policy_arn = aws_iam_policy.aws_efs.arn
+  role       = module.eks_ng_app.iam_role_name
+
+}
+

@@ -95,11 +95,11 @@ resource "helm_release" "aws-efs-csi-driver" {
     }
   }
 
-  # set {
-  #   name  = "storageClasses[0].parameters.fileSystemId"
-  #   value = var.efs_file_system_id
-  #   type  = "string"
-  # }
+  set {
+    name  = "storageClasses[0].parameters.fileSystemId"
+    value = var.efs_file_system_id
+    type  = "string"
+  }
 
   depends_on = [module.irsa_addon]
 }

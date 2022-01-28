@@ -1,5 +1,5 @@
 module "efs" {
-  count  = var.create_eks && var.enable_efs_on_eks ? 1 : 0
+  count  = var.enable_efs_on_eks ? 1 : 0
   source = "./modules/aws-efs"
 
   vpc_id                     = module.vpc.vpc_id

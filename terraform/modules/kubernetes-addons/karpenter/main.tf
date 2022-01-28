@@ -83,3 +83,13 @@ module "irsa_addon" {
   irsa_iam_policies          = concat([aws_iam_policy.karpenter.arn], var.irsa_policies)
   tags                       = var.tags
 }
+
+resource "aws_iam_role_policy_attachment" "karpenter_ssm_policy" {
+  role       = var.eks_worker_iam_role_name
+  policy_arn = data.aws_iam_policy.ssm_managed_instance.arn
+}
+
+resource "aws_iam_instance_profile" "karpenter" {
+  name = "KarpenterNodeInstanceProfile-${var.eks_cluster_id}"
+  role = var.eks_worker_iam_role_name
+}
