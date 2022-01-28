@@ -86,11 +86,20 @@ resource "helm_release" "aws-efs-csi-driver" {
     type  = "string"
   }
 
-  set {
-    name  = "storageClasses[0].parameters.fileSystemId"
-    value = var.efs_file_system_id
-    type  = "string"
+  dynamic "set" {
+    for_each = var.node_selector
+
+    content {
+      name  = "controller.nodeSelector.${set.key}"
+      value = set.value
+    }
   }
+
+  # set {
+  #   name  = "storageClasses[0].parameters.fileSystemId"
+  #   value = var.efs_file_system_id
+  #   type  = "string"
+  # }
 
   depends_on = [module.irsa_addon]
 }

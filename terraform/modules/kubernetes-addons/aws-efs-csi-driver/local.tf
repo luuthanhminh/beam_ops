@@ -6,7 +6,7 @@ locals {
     name                       = "aws-efs-csi-driver"
     chart                      = "aws-efs-csi-driver"
     repository                 = "https://kubernetes-sigs.github.io/aws-efs-csi-driver"
-    version                    = "2.2.2"
+    version                    = "2.2.3"
     namespace                  = "kube-system"
     timeout                    = "1200"
     create_namespace           = true

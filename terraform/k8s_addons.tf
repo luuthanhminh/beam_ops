@@ -21,7 +21,7 @@ module "kubernetes-addons" {
   enable_amazon_eks_vpc_cni           = false
   enable_amazon_eks_coredns           = false
   enable_amazon_eks_kube_proxy        = false
-  enable_amazon_eks_efs_csi           = false
+  enable_amazon_eks_efs_csi           = true
   efs_file_system_id                  = local.efs_id
   enable_argocd                       = true
 
