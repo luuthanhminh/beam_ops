@@ -3,7 +3,7 @@ locals {
     name                       = "grafana"
     chart                      = "grafana"
     repository                 = "https://grafana.github.io/helm-charts"
-    version                    = "6.21.0"
+    version                    = "6.21.1"
     namespace                  = "grafana"
     timeout                    = "300"
     create_namespace           = false

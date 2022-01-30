@@ -11,3 +11,19 @@ ingress:
 
 nodeSelector:
   kubernetes.io/os: ${operating_system}
+
+persistence:
+  type: pvc
+  enabled: true
+  storageClassName: efs-sc
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
+  # annotations: {}
+  finalizers:
+    - kubernetes.io/pvc-protection
+  inMemory:
+    enabled: false
+    
+initChownData:
+  enabled: false
