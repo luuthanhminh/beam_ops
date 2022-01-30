@@ -9,7 +9,7 @@ replicaCount: 2
 
 image:
   repository: amazon/aws-efs-csi-driver
-  tag: "v1.3.5"
+  tag: "v1.3.6"
   pullPolicy: IfNotPresent
 
 sidecars:
@@ -50,7 +50,7 @@ controller:
     # region: us-east-1
   # Enable if you want the controller to also delete the
   # path on efs when deleteing an access point
-  deleteAccessPointRootDir: false
+  deleteAccessPointRootDir: true
   podAnnotations: {}
   resources:
     {}

@@ -95,15 +95,6 @@ resource "helm_release" "aws-efs-csi-driver" {
     }
   }
 
-  dynamic "set" {
-    for_each = var.node_selector
-
-    content {
-      name  = "node.nodeSelector.${set.key}"
-      value = set.value
-    }
-  }
-
   set {
     name  = "storageClasses[0].parameters.fileSystemId"
     value = var.efs_file_system_id
