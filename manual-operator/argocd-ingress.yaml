@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: 'nginx'
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/enable-access-log: 'true'
+    nginx.ingress.kubernetes.io/proxy-body-size: '4096m'
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      access_log /var/log/nginx/access.log upstreaminfo  if=$loggable;
+  name: argocd
+  namespace: argocd
+spec:
+  rules:
+    - host: argocd.beam.to
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argo-cd-argocd-server
+                port:
+                  number: 443
