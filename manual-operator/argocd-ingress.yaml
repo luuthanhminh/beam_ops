@@ -13,7 +13,7 @@ metadata:
   namespace: argocd
 spec:
   rules:
-    - host: argocd.beam.to
+    - host: argocd-demo.beam.to
       http:
         paths:
           - path: /
