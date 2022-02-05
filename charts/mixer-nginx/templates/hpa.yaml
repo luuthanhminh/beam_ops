@@ -3,7 +3,6 @@ apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "mixer-nginx.fullname" . }}
-  namespace: {{ .Values.namespace }}
   labels:
     {{- include "mixer-nginx.labels" . | nindent 4 }}
 spec:
