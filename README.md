@@ -15,7 +15,7 @@ Folder structure
 │   ├── get_started.md
 │   ├── images
 │   └── infrastructure.md
-├── k8s
+├── manual-operator
 │   ├── beam-efs-pvc.yaml
 │   ├── beam-ingress.yaml
 │   ├── grafana.yaml

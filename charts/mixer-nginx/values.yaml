@@ -1,6 +1,7 @@
 # Default values for mixer-nginx.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+namespace: services
 
 replicaCount: 1
 

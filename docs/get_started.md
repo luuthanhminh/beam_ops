@@ -74,10 +74,10 @@ $ kubectl get pods -n kube-system
 
 Create SSL from Cloudflare and import to AWS ACM
 
-CD into the k8s directory.
+CD into the manual-operator directory.
 
 ```shell script
-cd k8s
+cd manual-operator
 ```
 
 Change the VPC CIDR in `nginx-ingress-controller.yaml`
@@ -100,10 +100,10 @@ $ kubectl apply -f nginx-ingress-controller.yaml
 
 ### EFS peristent volume claim
 
-CD into the k8s directory.
+CD into the manual-operator directory.
 
 ```shell script
-cd k8s
+cd manual-operator
 ```
 
 Deploy the manifest
@@ -115,10 +115,10 @@ $ kubectl apply -f beam-efs-pvc.yaml
 ### Ingress with AWS NLB
 
 
-CD into the k8s directory.
+CD into the manual-operator directory.
 
 ```shell script
-cd k8s
+cd manual-operator
 ```
 
 Deploy the manifest
