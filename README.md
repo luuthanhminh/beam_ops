@@ -16,11 +16,12 @@ Folder structure
 │   ├── images
 │   └── infrastructure.md
 ├── manual-operator
-│   ├── beam-efs-pvc.yaml
-│   ├── beam-ingress.yaml
-│   ├── grafana.yaml
-│   ├── karpenter_provisoner.yaml
-│   └── nginx-ingress-controller.yaml
+│  ├── argocd-ingress.yaml
+│  ├── grafana-ingress.yaml
+│  ├── nginx-ingress-controller.yaml
+│  ├── rancher-ingress.yaml
+│  ├── rancher.md
+│  └── sealed-secrets-controller.yaml
 ├── scripts
 └── terraform
     ├── modules
