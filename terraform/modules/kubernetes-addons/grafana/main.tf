@@ -76,5 +76,34 @@ resource "helm_release" "grafana" {
       value = set.value
     }
   }
+
+  set {
+    name  = "serviceAccount.name"
+    value = local.helm_config["service_account"]
+    type  = "string"
+  }
+
+  set {
+    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = module.irsa_addon.irsa_iam_role_arn
+    type  = "string"
+  }
+
+  depends_on = [module.irsa_addon]
 }
 
+module "irsa_addon" {
+  source                            = "../../../modules/irsa"
+  create_kubernetes_namespace       = false
+  create_kubernetes_service_account = false
+  eks_cluster_id                    = var.eks_cluster_id
+  kubernetes_namespace              = local.helm_config["namespace"]
+  kubernetes_service_account        = local.helm_config["service_account"]
+  irsa_iam_policies                 = concat([aws_iam_policy.cloudwatch.arn])
+}
+
+resource "aws_iam_policy" "cloudwatch" {
+  description = "IAM Policy for Cloudwatch"
+  name_prefix = "${local.helm_config["name"]}-policy"
+  policy      = data.aws_iam_policy_document.cloudwatch.json
+}

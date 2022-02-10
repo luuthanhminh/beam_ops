@@ -35,6 +35,7 @@ locals {
     dependency_update          = false
     replace                    = false
     postrender                 = ""
+    service_account            = "grafana"
   }
 
   helm_config = merge(
