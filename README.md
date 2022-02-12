@@ -18,6 +18,7 @@ Folder structure
 ├── manual-operator
 │  ├── argocd-ingress.yaml
 │  ├── grafana-ingress.yaml
+│  ├── grafana.yaml
 │  ├── nginx-ingress-controller.yaml
 │  ├── rancher-ingress.yaml
 │  ├── rancher.md

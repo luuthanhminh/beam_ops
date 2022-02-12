@@ -1,6 +1,6 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "v18.2.3"
+  version = "v18.5.1"
 
   cluster_name                    = local.eks_cluster_name
   cluster_version                 = var.k8s_version
@@ -32,39 +32,44 @@ module "eks" {
     "karpenter.sh/discovery" = local.eks_cluster_name
   })
 
-  eks_managed_node_groups = {
-    mng_addon = {
-      node_group_name = "mng-addon"
-      ami_type        = "BOTTLEROCKET_x86_64"
-      platform        = "bottlerocket"
+  # eks_managed_node_groups = {
+  #   mng_addon = {
+  #     node_group_name = "mng-addon"
+  #     ami_type        = "BOTTLEROCKET_x86_64"
+  #     platform        = "bottlerocket"
 
-      create_launch_template = false
-      launch_template_name   = ""
-      subnet_ids             = module.vpc.private_subnets
+  #     create_launch_template = false
+  #     launch_template_name   = ""
+  #     subnet_ids             = module.vpc.private_subnets
 
-      min_size     = 1
-      max_size     = 2
-      desired_size = 1
+  #     min_size     = 1
+  #     max_size     = 2
+  #     desired_size = 1
 
-      instance_types = ["m6i.large"]
-      capacity_type  = "ON_DEMAND"
-      labels = {
-        dedicated = "addon"
-      }
-      bootstrap_extra_args = <<-EOT
-      # extra args added
-      [settings.kernel]
-      lockdown = "integrity"
+  #     instance_types = ["m6i.large"]
+  #     capacity_type  = "ON_DEMAND"
+  #     labels = {
+  #       dedicated = "addon"
+  #     }
+  #     bootstrap_extra_args = <<-EOT
+  #     # extra args added
+  #     [settings.kernel]
+  #     lockdown = "integrity"
 
-      [settings.host-containers.admin]
-      enabled = true
-      [settings.host-containers.control]
-      enabled = true
-      EOT
+  #     [settings.host-containers.admin]
+  #     enabled = true
+  #     [settings.host-containers.control]
+  #     enabled = true
+  #     EOT
 
-      tags = merge(local.tags, {
-        Name = "mng-addon"
-      })
-    }
-  }
+  #     tags = merge(local.tags, {
+  #       Name = "mng-addon"
+  #     })
+
+  #     launch_template_tags = merge(local.tags, {
+  #       Name = "mng-addon"
+  #     })
+
+  #   }
+  # }
 }

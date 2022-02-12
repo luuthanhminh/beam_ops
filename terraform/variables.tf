@@ -1,10 +1,4 @@
 #  CLUSTER LABELS
-variable "org" {
-  type        = string
-  description = "tenant, which could be your organization name, e.g. aws'"
-  default     = "beam"
-}
-
 variable "tenant" {
   type        = string
   description = "Account Name or unique account unique id e.g., apps or management or aws007"
@@ -17,16 +11,11 @@ variable "environment" {
   description = "Environment area, e.g. prod or preprod "
 }
 
-variable "zone" {
-  type        = string
-  description = "zone, e.g. dev or qa or load or ops etc..."
-  default     = "ops"
-}
 
 variable "project" {
   type        = string
   description = "Application project: Beam, ICR...."
-  default     = "Minh"
+  default     = "Beam"
 }
 
 variable "tags" {
