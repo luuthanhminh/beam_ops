@@ -43,6 +43,12 @@ spec:
           env:
             - name: NODE_ENV
               value: production
+            - name: SERVER_ORIGIN
+              value: {{ .Values.env.serverOrigin }}
+            - name: SQLITE_DB_PATH
+              value: {{ .Values.env.sqliteDbPath }}
+            - name: NAMESPAPCE
+              value: {{ .Values.namespace }}
           command: ['/bin/sh', '-c', 'cd /src/server-api/; node .']
           ports:
             - name: http

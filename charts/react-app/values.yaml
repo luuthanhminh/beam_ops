@@ -82,3 +82,6 @@ nodeSelector:
 tolerations: []
 
 affinity: {}
+
+env:
+  serverOrigin: https://alpha.beam.to

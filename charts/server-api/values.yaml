@@ -90,3 +90,7 @@ tolerations: []
 affinity: {}
 
 efsVolumeClaim: beam-efs-pvc
+
+env:
+  serverOrigin: https://alpha.beam.to
+  sqliteDbPath: /src/server-api-volume/db.sqlite3
