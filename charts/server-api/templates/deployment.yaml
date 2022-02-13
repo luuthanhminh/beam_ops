@@ -47,7 +47,7 @@ spec:
               value: {{ .Values.env.serverOrigin }}
             - name: SQLITE_DB_PATH
               value: {{ .Values.env.sqliteDbPath }}
-            - name: NAMESPAPCE
+            - name: NAMESPACE
               value: {{ .Values.namespace }}
           command: ['/bin/sh', '-c', 'cd /src/server-api/; node .']
           ports:
