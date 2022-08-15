@@ -6,7 +6,7 @@ module "eks_ng_addon" {
   eks_cluster_name    = local.eks_cluster_name
   prefix_name         = "mng-addon"
   node_group_name     = "addon"
-  worker_iam_role_arn = module.eks.cluster_iam_role_arn
+  # worker_iam_role_arn = module.eks.worker_iam_role_arn
   cluster_endpoint    = module.eks.cluster_endpoint
   cluster_auth_base64 = module.eks.cluster_certificate_authority_data
   subnet_ids          = module.vpc.private_subnets
@@ -29,13 +29,13 @@ module "eks_ng_addon" {
 }
 
 module "eks_ng_app" {
-  source = "./modules/managed-node-group"
+  source = "./modules/bottlerocket-node-group"
 
   cluster_version     = local.k8s_version
   eks_cluster_name    = local.eks_cluster_name
   prefix_name         = "mng-app"
   node_group_name     = "app"
-  worker_iam_role_arn = module.eks.cluster_iam_role_arn
+  # worker_iam_role_arn = module.eks.cluster_iam_role_arn
   cluster_endpoint    = module.eks.cluster_endpoint
   cluster_auth_base64 = module.eks.cluster_certificate_authority_data
   subnet_ids          = module.vpc.private_subnets
@@ -59,13 +59,13 @@ module "eks_ng_app" {
 }
 
 module "eks_ng_media" {
-  source = "./modules/managed-node-group"
+  source = "./modules/bottlerocket-node-group"
 
   cluster_version     = local.k8s_version
   eks_cluster_name    = local.eks_cluster_name
   prefix_name         = "mng-media"
   node_group_name     = "media"
-  worker_iam_role_arn = module.eks.cluster_iam_role_arn
+  # worker_iam_role_arn = module.eks.cluster_iam_role_arn
   cluster_endpoint    = module.eks.cluster_endpoint
   cluster_auth_base64 = module.eks.cluster_certificate_authority_data
   subnet_ids          = module.vpc.public_subnets
@@ -82,7 +82,7 @@ module "eks_ng_media" {
     zone-mediasoup = "true"
     app_role       = "mediasoup"
   }
-  vpc_security_group_ids = [module.eks.cluster_primary_security_group_id]
+  vpc_security_group_ids = [module.eks.cluster_primary_security_group_id, aws_security_group.node_mediasoup.id]
   tags = merge(local.tags, {
     Name = "mng-media"
   })
@@ -91,13 +91,13 @@ module "eks_ng_media" {
 }
 
 module "eks_ng_mixer" {
-  source = "./modules/managed-node-group"
+  source = "./modules/bottlerocket-node-group"
 
   cluster_version     = local.k8s_version
   eks_cluster_name    = local.eks_cluster_name
   prefix_name         = "mng-mixer"
   node_group_name     = "mixer"
-  worker_iam_role_arn = module.eks.cluster_iam_role_arn
+  # worker_iam_role_arn = module.eks.
   cluster_endpoint    = module.eks.cluster_endpoint
   cluster_auth_base64 = module.eks.cluster_certificate_authority_data
   subnet_ids          = module.vpc.private_subnets
@@ -106,7 +106,7 @@ module "eks_ng_mixer" {
   max_size     = 10
   desired_size = 1
 
-  instance_types = ["t3.large"]
+  instance_types = ["c6i.xlarge"]
   capacity_type  = "ON_DEMAND"
 
   labels = {
@@ -116,6 +116,37 @@ module "eks_ng_mixer" {
   vpc_security_group_ids = [module.eks.cluster_primary_security_group_id]
   tags = merge(local.tags, {
     Name = "mng-mixer"
+  })
+
+  depends_on = [module.eks.cluster_id]
+}
+
+module "eks_ng_mixer_beta" {
+  source = "./modules/bottlerocket-node-group"
+
+  cluster_version     = local.k8s_version
+  eks_cluster_name    = local.eks_cluster_name
+  prefix_name         = "mng-mixer-beta"
+  node_group_name     = "mixer-beta"
+  # worker_iam_role_arn = module.eks.cluster_iam_role_arn
+  cluster_endpoint    = module.eks.cluster_endpoint
+  cluster_auth_base64 = module.eks.cluster_certificate_authority_data
+  subnet_ids          = module.vpc.private_subnets
+
+  min_size     = 1
+  max_size     = 10
+  desired_size = 1
+
+  instance_types = ["c6i.2xlarge"]
+  capacity_type  = "ON_DEMAND"
+
+  labels = {
+    dedicated  = "mixer-process"
+    zone-mixer-beta = "true"
+  }
+  vpc_security_group_ids = [module.eks.cluster_primary_security_group_id]
+  tags = merge(local.tags, {
+    Name = "mng-mixer-beta"
   })
 
   depends_on = [module.eks.cluster_id]
@@ -146,6 +177,14 @@ resource "aws_iam_role_policy_attachment" "eks_ng_mixer_additional" {
   role       = module.eks_ng_mixer.iam_role_name
 
   depends_on = [module.eks_ng_mixer]
+}
+
+resource "aws_iam_role_policy_attachment" "eks_ng_mixer_beta_additional" {
+
+  policy_arn = aws_iam_policy.aws_efs.arn
+  role       = module.eks_ng_mixer_beta.iam_role_name
+
+  depends_on = [module.eks_ng_mixer_beta]
 }
 
 resource "aws_iam_role_policy_attachment" "eks_ng_media_additional" {

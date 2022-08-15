@@ -13,7 +13,7 @@ metadata:
   namespace: cattle-system
 spec:
   rules:
-    - host: dashboard-demo.beam.to
+    - host: dashboard-demo.beingsbeam.com
       http:
         paths:
           - path: /

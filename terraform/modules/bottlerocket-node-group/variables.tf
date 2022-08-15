@@ -29,14 +29,6 @@ variable "ebs_volume_size" {
   default = 30
 }
 
-variable "worker_iam_role_arn" {
-  default = ""
-}
-
-variable "worker_iam_instance_profile_arn" {
-  default = ""
-}
-
 variable "subnet_ids" {
   type    = list(string)
   default = []

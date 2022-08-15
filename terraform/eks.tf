@@ -28,48 +28,6 @@ module "eks" {
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = concat(module.vpc.public_subnets, module.vpc.private_subnets)
-  tags = merge(local.tags, {
-    "karpenter.sh/discovery" = local.eks_cluster_name
-  })
-
-  # eks_managed_node_groups = {
-  #   mng_addon = {
-  #     node_group_name = "mng-addon"
-  #     ami_type        = "BOTTLEROCKET_x86_64"
-  #     platform        = "bottlerocket"
-
-  #     create_launch_template = false
-  #     launch_template_name   = ""
-  #     subnet_ids             = module.vpc.private_subnets
-
-  #     min_size     = 1
-  #     max_size     = 2
-  #     desired_size = 1
-
-  #     instance_types = ["m6i.large"]
-  #     capacity_type  = "ON_DEMAND"
-  #     labels = {
-  #       dedicated = "addon"
-  #     }
-  #     bootstrap_extra_args = <<-EOT
-  #     # extra args added
-  #     [settings.kernel]
-  #     lockdown = "integrity"
-
-  #     [settings.host-containers.admin]
-  #     enabled = true
-  #     [settings.host-containers.control]
-  #     enabled = true
-  #     EOT
-
-  #     tags = merge(local.tags, {
-  #       Name = "mng-addon"
-  #     })
-
-  #     launch_template_tags = merge(local.tags, {
-  #       Name = "mng-addon"
-  #     })
-
-  #   }
-  # }
+  cluster_enabled_log_types = []
+  tags = local.tags
 }

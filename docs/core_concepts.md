@@ -23,13 +23,17 @@ We use terraform to provision the infrastructure on AWS and Kubenetes addons at 
 | prometheus | monitoring resources on EKS |
 | grafana | visualization dashboard to analytics & monitoring, |
 | ingress-nginx | revert proxy and routing tracfic in K8s |
+| sealed-secret | encrypt secret string and store in git repo |
+| rancher | build the dashboard for EKS |
+| argo-cd |  GitOps continuous delivery tool for Kubernetes |
+| cast-ai | Cost optimization advices for Kubernetes |
 
 ## Helm
 
 Package the application to single chart and deploy to k8s
 
-## Jenkins
+## Github action
 
-CI/CD server to build application images and deploy application into k8s cluster
+Using github action for CI/CD to build docker image and deploy to EKS
 
 

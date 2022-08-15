@@ -49,6 +49,19 @@ spec:
               value: {{ .Values.env.sqliteDbPath }}
             - name: NAMESPACE
               value: {{ .Values.namespace }}
+            - name: EFF_CLAIM
+              value: {{ .Values.efsVolumeClaim }}
+            - name: DB_HOST
+              value: {{ .Values.db.dbHost }}
+            - name: DB_USERNAME
+              value: {{ .Values.db.dbUserName }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "server-api.fullname" . }}
+                  key: dbPassword
+            - name: DB_DATABASE
+              value: {{ .Values.db.dbDatabase }}
           command: ['/bin/sh', '-c', 'cd /src/server-api/; node .']
           ports:
             - name: http

@@ -15,7 +15,7 @@ metadata:
   namespace: monitoring
 spec:
   rules:
-    - host: grafana-demo.beam.to
+    - host: grafana-demo.beingsbeam.com
       http:
         paths:
           - path: /

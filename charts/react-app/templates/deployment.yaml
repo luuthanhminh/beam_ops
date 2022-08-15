@@ -41,7 +41,7 @@ spec:
             - name: REACT_APP_SERVER_ORIGIN
               value: {{ .Values.env.serverOrigin }}
           command: ["/bin/sh","-c"]
-          args: ["sed -i -e 's|https://dev.beam.to|$(REACT_APP_SERVER_ORIGIN)|g' /build/index.html ; nginx -g 'daemon off;'"]
+          args: ["sed -i -e 's|https://dev.beingsbeam.com|$(REACT_APP_SERVER_ORIGIN)|g' /build/index.html ; sed -i -e 's|https://dev.beam.to|$(REACT_APP_SERVER_ORIGIN)|g' /build/index.html ; nginx -g 'daemon off;'"]
           ports:
             - name: http
               containerPort: 80

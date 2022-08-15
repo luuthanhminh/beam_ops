@@ -30,22 +30,10 @@ resource "aws_launch_template" "linux_lt" {
   ebs_optimized          = true
 
   block_device_mappings {
-    device_name = "/dev/xvda"
+    device_name = local.root_device_mappings[0].device_name
 
     ebs {
       volume_size           = var.root_volume_size
-      volume_type           = "gp2"
-      delete_on_termination = true
-      encrypted             = true
-      # kms_key_id            = var.kms_key_arn
-    }
-  }
-
-  block_device_mappings {
-    device_name = "/dev/xvdb"
-
-    ebs {
-      volume_size           = var.ebs_volume_size
       volume_type           = "gp2"
       delete_on_termination = true
       encrypted             = true

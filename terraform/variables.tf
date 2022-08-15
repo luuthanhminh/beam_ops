@@ -178,3 +178,8 @@ variable "enable_efs_on_eks" {
   default = true
 }
 
+variable "db_password" {
+  type = string
+  description = "RDS master password"
+}
+

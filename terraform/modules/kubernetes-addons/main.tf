@@ -18,29 +18,6 @@
 
 #-----------------AWS Managed EKS Add-ons----------------------
 
-module "aws_vpc_cni" {
-  count          = var.enable_amazon_eks_vpc_cni ? 1 : 0
-  source         = "./aws-vpc-cni"
-  add_on_config  = var.amazon_eks_vpc_cni_config
-  eks_cluster_id = var.eks_cluster_id
-  common_tags    = var.tags
-}
-
-module "aws_coredns" {
-  count          = var.enable_amazon_eks_coredns ? 1 : 0
-  source         = "./aws-coredns"
-  add_on_config  = var.amazon_eks_coredns_config
-  eks_cluster_id = var.eks_cluster_id
-  common_tags    = var.tags
-}
-
-module "aws_kube_proxy" {
-  count          = var.enable_amazon_eks_kube_proxy ? 1 : 0
-  source         = "./aws-kube-proxy"
-  add_on_config  = var.amazon_eks_kube_proxy_config
-  eks_cluster_id = var.eks_cluster_id
-  common_tags    = var.tags
-}
 
 module "aws_ebs_csi_driver" {
   count          = var.enable_amazon_eks_aws_ebs_csi_driver ? 1 : 0
@@ -50,15 +27,6 @@ module "aws_ebs_csi_driver" {
   common_tags    = var.tags
 }
 
-#-----------------Kubernetes Add-ons----------------------
-module "agones" {
-  count                        = var.enable_agones ? 1 : 0
-  source                       = "./agones"
-  helm_config                  = var.agones_helm_config
-  eks_worker_security_group_id = var.eks_worker_security_group_id
-  manage_via_gitops            = var.argocd_manage_add_ons
-  node_selector                = var.node_selector
-}
 
 module "argocd" {
   count               = var.enable_argocd ? 1 : 0
@@ -70,26 +38,6 @@ module "argocd" {
   node_selector       = var.node_selector
 }
 
-module "aws_for_fluent_bit" {
-  count             = var.enable_aws_for_fluentbit ? 1 : 0
-  source            = "./aws-for-fluentbit"
-  helm_config       = var.aws_for_fluentbit_helm_config
-  eks_cluster_id    = var.eks_cluster_id
-  irsa_policies     = var.aws_for_fluentbit_irsa_policies
-  tags              = var.tags
-  manage_via_gitops = var.argocd_manage_add_ons
-  node_selector     = var.node_selector
-}
-
-module "aws_load_balancer_controller" {
-  count             = var.enable_aws_load_balancer_controller ? 1 : 0
-  source            = "./aws-load-balancer-controller"
-  helm_config       = var.aws_load_balancer_controller_helm_config
-  eks_cluster_id    = var.eks_cluster_id
-  tags              = var.tags
-  manage_via_gitops = var.argocd_manage_add_ons
-  node_selector     = var.node_selector
-}
 
 module "aws_node_termination_handler" {
   count  = var.enable_aws_node_termination_handler && length(var.auto_scaling_group_names) > 0 ? 1 : 0
@@ -101,23 +49,6 @@ module "aws_node_termination_handler" {
   node_selector           = var.node_selector
 }
 
-module "aws_opentelemetry_collector" {
-  count  = var.enable_aws_open_telemetry ? 1 : 0
-  source = "./aws-opentelemetry-eks"
-
-  addon_config             = var.aws_open_telemetry_addon_config
-  node_groups_iam_role_arn = var.node_groups_iam_role_arn
-  manage_via_gitops        = var.argocd_manage_add_ons
-  node_selector            = var.node_selector
-}
-
-module "cert_manager" {
-  count             = var.enable_cert_manager ? 1 : 0
-  source            = "./cert-manager"
-  helm_config       = var.cert_manager_helm_config
-  manage_via_gitops = var.argocd_manage_add_ons
-  node_selector     = var.node_selector
-}
 
 module "cluster_autoscaler" {
   count             = var.enable_cluster_autoscaler ? 1 : 0
@@ -136,45 +67,6 @@ module "aws_efs_csi" {
   efs_file_system_id = var.efs_file_system_id
   eks_cluster_id     = var.eks_cluster_id
   node_selector      = var.node_selector
-}
-
-module "fargate_fluentbit" {
-  count          = var.enable_fargate_fluentbit ? 1 : 0
-  source         = "./fargate-fluentbit"
-  eks_cluster_id = var.eks_cluster_id
-  addon_config   = var.fargate_fluentbit_addon_config
-}
-
-module "ingress_nginx" {
-  count             = var.enable_ingress_nginx ? 1 : 0
-  source            = "./ingress-nginx"
-  helm_config       = var.ingress_nginx_helm_config
-  manage_via_gitops = var.argocd_manage_add_ons
-  node_selector     = var.node_selector
-}
-
-module "karpenter" {
-  count                    = var.enable_karpenter ? 1 : 0
-  source                   = "./karpenter"
-  helm_config              = var.karpenter_helm_config
-  eks_cluster_id           = var.eks_cluster_id
-  irsa_policies            = var.karpenter_irsa_policies
-  tags                     = var.tags
-  manage_via_gitops        = var.argocd_manage_add_ons
-  node_selector            = var.node_selector
-  eks_worker_iam_role_name = var.eks_worker_iam_role_name
-}
-
-module "keda" {
-  count             = var.enable_keda ? 1 : 0
-  source            = "./keda"
-  helm_config       = var.keda_helm_config
-  eks_cluster_id    = var.eks_cluster_id
-  create_irsa       = var.keda_create_irsa
-  irsa_policies     = var.keda_irsa_policies
-  tags              = var.tags
-  manage_via_gitops = var.argocd_manage_add_ons
-  node_selector     = var.node_selector
 }
 
 module "metrics_server" {
@@ -210,34 +102,10 @@ module "grafana" {
   ingress_domain      = var.grafana_ingress_domain
 }
 
-module "spark_k8s_operator" {
-  count             = var.enable_spark_k8s_operator ? 1 : 0
-  source            = "./spark-k8s-operator"
-  helm_config       = var.spark_k8s_operator_helm_config
-  manage_via_gitops = var.argocd_manage_add_ons
-  node_selector     = var.node_selector
-}
-
-module "traefik" {
-  count             = var.enable_traefik ? 1 : 0
-  source            = "./traefik"
-  helm_config       = var.traefik_helm_config
-  manage_via_gitops = var.argocd_manage_add_ons
-  node_selector     = var.node_selector
-}
-
 module "vpa" {
   count             = var.enable_vpa ? 1 : 0
   source            = "./vpa"
   helm_config       = var.vpa_helm_config
-  manage_via_gitops = var.argocd_manage_add_ons
-  node_selector     = var.node_selector
-}
-
-module "yunikorn" {
-  count             = var.enable_yunikorn ? 1 : 0
-  source            = "./yunikorn"
-  helm_config       = var.yunikorn_helm_config
   manage_via_gitops = var.argocd_manage_add_ons
   node_selector     = var.node_selector
 }

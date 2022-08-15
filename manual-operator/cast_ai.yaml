@@ -1,0 +1,283 @@
+---
+# Source: castai-agent/templates/namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: castai-agent
+  labels:
+    app.kubernetes.io/name: castai-agent
+    app.kubernetes.io/instance: castai-agent
+    app.kubernetes.io/version: "v0.22.8"
+    app.kubernetes.io/managed-by: castai
+---
+# Source: castai-agent/templates/resource-quota.yaml
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: castai-agent-critical-pods
+  namespace: castai-agent
+  labels:
+    app.kubernetes.io/name: castai-agent
+    app.kubernetes.io/instance: castai-agent
+    app.kubernetes.io/version: "v0.22.8"
+    app.kubernetes.io/managed-by: castai
+spec:
+  scopeSelector:
+    matchExpressions:
+      - operator: In
+        scopeName: PriorityClass
+        values:
+          # Required to ensure castai-agent is always running to provide autoscaling capabilities.
+          - system-cluster-critical
+---
+# Source: castai-agent/templates/rbac.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: castai-agent
+  namespace: castai-agent
+  labels:
+    app.kubernetes.io/name: castai-agent
+    app.kubernetes.io/instance: castai-agent
+    app.kubernetes.io/version: "v0.22.8"
+    app.kubernetes.io/managed-by: castai
+---
+# Source: castai-agent/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: castai-agent
+  namespace: castai-agent
+  labels:
+    app.kubernetes.io/name: castai-agent
+    app.kubernetes.io/instance: castai-agent
+    app.kubernetes.io/version: "v0.22.8"
+    app.kubernetes.io/managed-by: castai
+data:
+  API_KEY: "NzU5Y2I4ZjQyNTdmOGMzNmFmODRhOTQwMWYzMzVlMTEwYWE3YTFhOGMwZTI1NjM3Mjc5ZmM3NTIxMzU1YmViYQ=="
+---
+# Source: castai-agent/templates/clustervpa-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: castai-agent-autoscaler
+  namespace: castai-agent
+data:
+  # Increase memory requests/limits by 256Mi for every 20 nodes. round_up(nodes/nodes_per_step)*step
+  # For example, for 150 nodes: round_up(150/20)*256Mi=2048Mi
+  castai-agent-autoscaler: |-
+    {
+      "agent": {
+        "requests": {
+          "memory": {
+            "base": "0",
+            "max": "8Gi",
+            "step": "256Mi",
+            "nodesPerStep": 20
+          }
+        },
+        "limits": {
+          "memory": {
+            "base": "0",
+            "max": "8Gi",
+            "step": "256Mi",
+            "nodesPerStep": 20
+          }
+        }
+      }
+    }
+---
+# Source: castai-agent/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: castai-agent
+  labels:
+    app.kubernetes.io/name: castai-agent
+    app.kubernetes.io/instance: castai-agent
+    app.kubernetes.io/version: "v0.22.8"
+    app.kubernetes.io/managed-by: castai
+rules:
+  # ---
+  # Required for cost savings estimation features.
+  # ---
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - nodes
+      - replicationcontrollers
+      - persistentvolumeclaims
+      - persistentvolumes
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+  - apiGroups:
+      - "apps"
+    resources:
+      - deployments
+      - replicasets
+      - daemonsets
+      - statefulsets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - "storage.k8s.io"
+    resources:
+      - storageclasses
+      - csinodes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - "batch"
+    resources:
+      - jobs
+    verbs:
+      - get
+      - list
+      - watch
+---
+# Source: castai-agent/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: castai-agent
+  labels:
+    app.kubernetes.io/name: castai-agent
+    app.kubernetes.io/instance: castai-agent
+    app.kubernetes.io/version: "v0.22.8"
+    app.kubernetes.io/managed-by: castai
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: castai-agent
+subjects:
+  - kind: ServiceAccount
+    name: castai-agent
+    namespace: castai-agent
+---
+# Source: castai-agent/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: castai-agent
+  namespace: castai-agent
+rules:
+  # ---
+  # Required for proportional vertical cluster autoscaler to adjust castai-agent requests/limits.
+  # ---
+  - apiGroups:
+      - "apps"
+    resources:
+      - deployments
+    resourceNames:
+      - castai-agent
+    verbs:
+      - patch
+---
+# Source: castai-agent/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: castai-agent
+  namespace: castai-agent
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: castai-agent
+subjects:
+  - kind: ServiceAccount
+    name: castai-agent
+    namespace: castai-agent
+---
+# Source: castai-agent/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: castai-agent
+  namespace: castai-agent
+  labels:
+    app.kubernetes.io/name: castai-agent
+    app.kubernetes.io/instance: castai-agent
+    app.kubernetes.io/version: "v0.22.8"
+    app.kubernetes.io/managed-by: castai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: castai-agent
+      app.kubernetes.io/instance: castai-agent
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: castai-agent
+        app.kubernetes.io/instance: castai-agent
+    spec:
+      priorityClassName: system-cluster-critical
+      serviceAccountName: castai-agent
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: "kubernetes.io/os"
+                    operator: In
+                    values: [ "linux" ]
+              - matchExpressions:
+                  - key: "beta.kubernetes.io/os"
+                    operator: In
+                    values: [ "linux" ]
+
+      containers:
+        - name: agent
+          image: "castai/agent:v0.22.8"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: API_URL
+              value: "api.cast.ai"
+            - name: PPROF_PORT
+              value: "6060"
+            - name: PROVIDER
+              value: "eks"
+            - name: EKS_ACCOUNT_ID
+              value: "462068371076"
+            - name: EKS_REGION
+              value: "eu-west-2"
+            - name: EKS_CLUSTER_NAME
+              value: "arn:aws:eks:eu-west-2:462068371076:cluster/462068371076-dev-eks"
+          envFrom:
+            - secretRef:
+                name: castai-agent
+          
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              cpu: 1000m
+        - name: autoscaler
+          image: k8s.gcr.io/cpvpa-amd64:v0.8.3
+          command:
+            - /cpvpa
+            - --target=deployment/castai-agent
+            - --namespace=castai-agent
+            - --poll-period-seconds=300
+            - --config-file=/etc/config/castai-agent-autoscaler
+          volumeMounts:
+            - mountPath: /etc/config
+              name: autoscaler-config
+      volumes:
+        - name: autoscaler-config
+          configMap:
+            name: castai-agent-autoscaler

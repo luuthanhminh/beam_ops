@@ -18,7 +18,7 @@ data "aws_eks_cluster_auth" "cluster" {
 provider "aws" {
   region                  = "eu-west-2"
   profile                 = "beam"
-  shared_credentials_file = "~/.aws/credentials"
+  shared_credentials_file = "/home/dev/.aws/credentials"
 }
 
 
